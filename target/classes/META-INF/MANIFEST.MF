@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Built-By: Antim.Yadav
+Build-Jdk: 11.0.10
+Main-Class: com.divergentsl.cms.ClinicManagementSystem
+Created-By: Maven Integration for Eclipse
+
