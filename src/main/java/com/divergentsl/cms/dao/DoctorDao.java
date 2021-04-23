@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.divergentsl.cms.database.DatabaseManager;
 import com.divergentsl.cms.database.IDatabaseManager;
 
 /**
@@ -24,9 +25,9 @@ public class DoctorDao {
 	public static final String NAME = "dname";
 	public static final String ID = "did";
 	
-	IDatabaseManager databaseManager;
+	DatabaseManager databaseManager;
 
-	public DoctorDao(IDatabaseManager databaseManager) {
+	public DoctorDao(DatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
 	}
 

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,8 +15,8 @@ public class DatabaseManager implements IDatabaseManager{
 	
 	private static Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
 	
-	
-	
+	@Autowired
+	Environment env;
 	
 	static {
 		try {
@@ -26,6 +28,6 @@ public class DatabaseManager implements IDatabaseManager{
 	}
 
 	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(IDatabaseManager.url, IDatabaseManager.username, IDatabaseManager.password);
+		return DriverManager.getConnection(env.getProperty(URL), env.getProperty(USERNAME), env.getProperty(PASSWORD));
 	}
 }
