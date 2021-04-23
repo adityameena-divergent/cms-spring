@@ -56,7 +56,7 @@ public class CRUDDrugs {
 				break CRUD;
 
 			default:
-				logger.debug("Invalid Input!");
+				logger.info("Invalid Input!");
 				break;
 			}
 		}
@@ -93,7 +93,7 @@ public class CRUDDrugs {
         	Map<String, String> data = drugDao.search(id);
 
         	if (data.size() == 0) {
-        		logger.debug("Drug Not Found!");
+        		logger.info("Drug Not Found!");
         	} else {
 	            System.out.println("\nDrug Id: " + id);
 	            System.out.println("Previous Drug Name: " + data.get("name"));
@@ -110,7 +110,7 @@ public class CRUDDrugs {
 	            drugDao.update(data);
         	}
         } catch(SQLException e) {
-        	logger.debug(e.getMessage());
+        	logger.info(e.getMessage());
         }
     }
 
@@ -129,15 +129,15 @@ public class CRUDDrugs {
 			if (drugDao.search(id).size() != 0) {
 				int i = drugDao.delete(id);
 				if(i > 0) {
-					logger.debug("Drug Deleted Successfully...");
+					logger.info("Drug Deleted Successfully...");
 				} else {
-					logger.debug("Drug Deletion Unsuccessfull!");
+					logger.info("Drug Deletion Unsuccessfull!");
 				}
 			} else {
-				logger.debug("Drug Not Found!");
+				logger.info("Drug Not Found!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 
 	}
@@ -162,10 +162,10 @@ public class CRUDDrugs {
 				System.out.println("Drug Name: " + data.get("name"));
 				System.out.println("Description: " + data.get("description"));
 			} else {
-				logger.debug("Drug Not Found!");
+				logger.info("Drug Not Found!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -187,12 +187,12 @@ public class CRUDDrugs {
 
 			int i = drugDao.add(name, description);
 			if (i > 0) {
-				logger.debug("Drug Added Successfully...");
+				logger.info("Drug Added Successfully...");
 			} else {
-				logger.debug("Drug Add Unsucessful!");
+				logger.info("Drug Add Unsucessful!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 

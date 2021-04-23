@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 
@@ -23,8 +24,10 @@ public class Login {
 	private Admin admin;
 	@Autowired
 	private Doctor doctor;
-		
 	
+	@Autowired
+	private Environment env;
+		
 	
 
     /**
@@ -33,6 +36,9 @@ public class Login {
      */
     public void loginPanel() {
 
+    	System.setProperty("slf4j.detectLoggerNameMismatch", "true");
+    	
+    	
 
         Main:
         while(true) {
@@ -49,7 +55,7 @@ public class Login {
                     if (admin.adminLogin()) {
                         admin.adminPanel();
                     } else {
-                    	logger.debug("You are not authorised!");
+                    	logger.info("You are not authorised!");
                     }
                     break;
 
@@ -61,7 +67,7 @@ public class Login {
                         String s[] = did.split(" ");
                         doctor.doctorPanel(s[0], s[1]);
                     } else {
-                    	logger.debug("You are not Authorised");
+                    	logger.info("You are not Authorised");
                         break Login;
                     }
                     break;
@@ -70,7 +76,7 @@ public class Login {
                     break Main;
 
                 default:
-                	logger.debug("Invalid Input!");
+                	logger.info("Invalid Input!");
                     break;
             }
         }
@@ -81,6 +87,10 @@ public class Login {
         System.out.println("1. Admin");
         System.out.println("2. Doctor");
         System.out.println("3. Exit");
+    }
+    
+    public String getPropertyValue() {
+    	return env.getProperty("props");
     }
 
 

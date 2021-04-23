@@ -57,7 +57,7 @@ public class CRUDDoctor {
 				break CRUD;
 
 			default:
-				logger.debug("Invalid Input!");
+				logger.info("Invalid Input!");
 				break;
 			}
 		}
@@ -91,20 +91,20 @@ public class CRUDDoctor {
 
 		try {
 			if (doctorDao.searchById(doctor_id).size() == 0) {
-				logger.debug("Doctor Not Found!");
+				logger.info("Doctor Not Found!");
 			} else {
 
 				try {
 
 					doctorDao.delete(doctor_id);
-					logger.debug("Data Deleted Successfully...");
+					logger.info("Data Deleted Successfully...");
 
 				} catch (SQLException e) {
-					logger.debug("Data Deletion Unsuccessful...");
+					logger.info("Data Deletion Unsuccessful...");
 				}
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -124,12 +124,12 @@ public class CRUDDoctor {
 		try {
 			map = doctorDao.searchById(did);
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 			return;
 		}
 
 		if (map == null || map.size() == 0) {
-			logger.debug("Doctor Not Found!");
+			logger.info("Doctor Not Found!");
 		} else {
 
 			printPreviousDataOfDoctor(map);
@@ -141,12 +141,12 @@ public class CRUDDoctor {
 
 			try {
 				if(doctorDao.update(map) > 0) {
-					logger.debug("Data Update Successfully...");
+					logger.info("Data Update Successfully...");
 				} else {
-					logger.debug("Data update unsucessful!");
+					logger.info("Data update unsucessful!");
 				}
 			} catch (SQLException e) {
-				logger.debug(e.getMessage());
+				logger.info(e.getMessage());
 			}
 		}
 	}
@@ -187,7 +187,7 @@ public class CRUDDoctor {
 			System.out.println("-------------------------------------------------");
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -213,12 +213,12 @@ public class CRUDDoctor {
 		try {
 			int i = doctorDao.insert(dname, username, password, speciality);
 			if (i > 0) {
-				logger.debug("Data Inserted Successfully...");
+				logger.info("Data Inserted Successfully...");
 			} else {
-				logger.debug("Data Insertion Unsucessful!");
+				logger.info("Data Insertion Unsucessful!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 
 	}

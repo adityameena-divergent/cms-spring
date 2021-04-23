@@ -76,7 +76,7 @@ public class Doctor {
                     break Logout;
                 
                 default:
-                	logger.debug("Invalid Input!");
+                	logger.info("Invalid Input!");
                 	break;
             }
         }
@@ -100,14 +100,14 @@ public class Doctor {
         	String doctorName = loginDao.doctorLogin(username, password);
         	
             if(doctorName != null) {
-            	logger.debug("Doctor Login Successfull...");
+            	logger.info("Doctor Login Successfull...");
                 return doctorName;
             } else {
-            	logger.debug("Incorrect Username & Password!");
+            	logger.info("Incorrect Username & Password!");
                 return null;
             }
         } catch (SQLException e) {
-        	logger.debug(e.getMessage());
+        	logger.info(e.getMessage());
         }
         return null;
     }

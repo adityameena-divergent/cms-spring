@@ -39,7 +39,7 @@ public class CRUDPatient {
 			Map<String, String> data = patientDao.search(patientId);
 
 			if (data.size() == 0) {
-				logger.debug("Patient not found...");
+				logger.info("Patient not found...");
 				return;
 			}
 
@@ -68,14 +68,14 @@ public class CRUDPatient {
 			int i = patientDao.update(data);
 
 			if (i != 0) {
-				logger.debug("Data Update Successfully...");
+				logger.info("Data Update Successfully...");
 			} else {
-				logger.debug("Data update unsucessfull...");
+				logger.info("Data update unsucessfull...");
 			}
 
 		} catch (SQLException e) {
 
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 
 	}
@@ -95,15 +95,15 @@ public class CRUDPatient {
 
 			if (patientDao.search(patientId).size() != 0)
 				if (patientDao.delete(patientId) > 0) {
-					logger.debug("Patient deleted successfully...");
+					logger.info("Patient deleted successfully...");
 				} else {
-					logger.debug("Patient deletion unsuccessful...");
+					logger.info("Patient deletion unsuccessful...");
 				}
 			else
-				logger.debug("Patient not found...");
+				logger.info("Patient not found...");
 
 		} catch (SQLException e) {
-			logger.debug("Problem with database");
+			logger.info("Problem with database");
 		}
 
 	}
@@ -159,7 +159,7 @@ public class CRUDPatient {
 				break CRUD;
 
 			default:
-				logger.debug("Invalid Input!");
+				logger.info("Invalid Input!");
 				break;
 			}
 
@@ -203,12 +203,12 @@ public class CRUDPatient {
 
 			
 			if (patientDao.insert(map) > 0) {
-				logger.debug("Data Inserted Successfully...");
+				logger.info("Data Inserted Successfully...");
 			} else {
-				logger.debug("Data Insert Unsucessful...");
+				logger.info("Data Insert Unsucessful...");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -236,11 +236,11 @@ public class CRUDPatient {
 				System.out.println("Contact Number: " + data.get("contactNumber"));
 				System.out.println("Address: " + data.get("address"));
 			} else {
-				logger.debug("Data Not Found!");
+				logger.info("Data Not Found!");
 			}
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -269,11 +269,11 @@ public class CRUDPatient {
 				System.out.println(
 						"----------------------------------------------------------------------------------------------------------------");
 			} else {
-				logger.debug("Data Not Found!");
+				logger.info("Data Not Found!");
 			}
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 

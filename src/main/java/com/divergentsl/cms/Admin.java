@@ -48,15 +48,15 @@ public class Admin {
         try {
 
             if(loginDao.adminLogin(username, password)) {
-            	logger.debug("Login Successful...");
+            	logger.info("Login Successful...");
                 return true;
             } else {
-            	logger.debug("Incorrect Username & Password!");
+            	logger.info("Incorrect Username & Password!");
                 return false;
             }
 
         } catch(Exception e) {
-        	logger.debug(e.getMessage());
+        	logger.info(e.getMessage());
         }
         return false;
     }
@@ -66,6 +66,8 @@ public class Admin {
      * This method print all the operation that admin can perform, and ask for input for which operation admin want to perform, then after it redirect to that specific operation panel according to input.
      */
     public void adminPanel() {
+    	
+    	
         LOGOUT:
         while(true) {
 
@@ -99,7 +101,7 @@ public class Admin {
                     break LOGOUT;
 
                 default:
-                	logger.debug("Invalid Input!");
+                	logger.info("Invalid Input!");
                     break;
             }
         }

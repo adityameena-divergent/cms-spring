@@ -1,6 +1,7 @@
 package com.divergentsl.cms;
 
-import org.springframework.context.ApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.divergentsl.cms.config.JavaConfiguration;
@@ -12,13 +13,20 @@ import com.divergentsl.cms.config.JavaConfiguration;
  */
 public class ClinicManagementSystem {
 
+	private static Logger logger = LoggerFactory.getLogger(Login.class);
+	
     public static void main(String args[]) {
 
         
     	@SuppressWarnings("resource")
-		ApplicationContext context = new AnnotationConfigApplicationContext(JavaConfiguration.class);
-    	
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+    	context.getEnvironment().setActiveProfiles("dev");
+    	context.register(JavaConfiguration.class);
+    	context.refresh();
     	Login login = context.getBean("login", Login.class);
+    	
+    	logger.info("Properties:{}", login.getPropertyValue());
+    	
     	login.loginPanel();
     	
     }

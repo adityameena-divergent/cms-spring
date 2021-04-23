@@ -73,19 +73,19 @@ public class PatientAppointment {
 
 			if (patientDao.search(patientId).size() == 0 || doctorDao.searchById(doctorId).size() == 0) {
 				
-				logger.debug("Patient or Doctor Data Not Found!");
+				logger.info("Patient or Doctor Data Not Found!");
 				
 			} else {
 				int i = patientAppointmentDao.makeAppointment(map);
 				if(i > 0) {
-					logger.debug("Appointment Created Successfully...");
+					logger.info("Appointment Created Successfully...");
 				} else {
-					logger.debug("Appointment Creation Unsuccessfull!");
+					logger.info("Appointment Creation Unsuccessfull!");
 				}
 			}
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -121,7 +121,7 @@ public class PatientAppointment {
 					"---------------------------------------------------------------------------------------------------------------");
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -155,7 +155,7 @@ public class PatientAppointment {
 		}
 
 		catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -189,16 +189,16 @@ public class PatientAppointment {
 				int i = patientAppointmentDao.addPrescription(data);
 
 				if(i > 0) {
-					logger.debug("Prescription Added Successfully...");
+					logger.info("Prescription Added Successfully...");
 				} else {
-					logger.debug("Prescription Add Unsuccessfull!");
+					logger.info("Prescription Add Unsuccessfull!");
 				}
 				
 			} else {
-				logger.debug("Appointment Data Not Found!");
+				logger.info("Appointment Data Not Found!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -233,11 +233,11 @@ public class PatientAppointment {
 				System.out.println(
 						"\n--------------------------------------------------------------------------------------------------------------------------------------------------");
 			} else {
-				logger.debug("Patient Not Found!");
+				logger.info("Patient Not Found!");
 			}
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -261,10 +261,10 @@ public class PatientAppointment {
 						invoice.get("fee"));
 				System.out.println("-----------------------------------------------");
 			} else {
-				logger.debug("Patient Not Found!");
+				logger.info("Patient Not Found!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 

@@ -60,7 +60,7 @@ public class LabTest {
 				break Exit;
 				
 			default:
-				logger.debug("Invalid Input!");
+				logger.info("Invalid Input!");
 				break;
 
 			}
@@ -104,12 +104,12 @@ public class LabTest {
 
 			int i = labTestDao.add(patient_id, test_name, fee);
 			if(i > 0) {
-				logger.debug("New Test Added Successfully...");
+				logger.info("New Test Added Successfully...");
 			} else {
-				logger.debug("Test Add Unsuccessfull!");
+				logger.info("Test Add Unsuccessfull!");
 			}
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 
@@ -134,11 +134,11 @@ public class LabTest {
 				System.out.println("Patient Id: " + data.get("patientId"));
 				System.out.println("Test Fee: " + data.get("fee"));
 			} else {
-				logger.debug("Test Not Found!");
+				logger.info("Test Not Found!");
 			}
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 	
@@ -166,7 +166,7 @@ public class LabTest {
 					"--------------------------------------------------------------------------------------------");
 
 		} catch (SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 	
@@ -186,16 +186,16 @@ public class LabTest {
 			if (labTestDao.search(testId).size() != 0) {
 				int i = labTestDao.delete(testId);
 				if (i > 0) {
-					logger.debug("Test Data Deleted Successfully...");
+					logger.info("Test Data Deleted Successfully...");
 				} else {
-					logger.debug("Test Data Deletion Unsuccessfull!");
+					logger.info("Test Data Deletion Unsuccessfull!");
 				}
 			} else {
-				logger.debug("Test Data Not Found!");
+				logger.info("Test Data Not Found!");
 			}
 			
 		} catch(SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 	
@@ -234,17 +234,17 @@ public class LabTest {
 				int i = labTestDao.update(data);
 				
 				if(i > 0) {
-					logger.debug("Test Data Update Successfully...");
+					logger.info("Test Data Update Successfully...");
 				} else {
-					logger.debug("Test Data Update Unsuccessfull!");
+					logger.info("Test Data Update Unsuccessfull!");
 				}
 				
 				
 			} else {
-				logger.debug("Test Data Not Found!");
+				logger.info("Test Data Not Found!");
 			}
 		} catch(SQLException e) {
-			logger.debug(e.getMessage());
+			logger.info(e.getMessage());
 		}
 	}
 	
