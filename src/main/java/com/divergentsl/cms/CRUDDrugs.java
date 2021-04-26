@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.DrugDao;
-import com.divergentsl.dto.DrugDto;
-import com.divergentsl.dto.PatientDto;
+import com.divergentsl.cms.dto.DrugDto;
+import com.divergentsl.cms.dto.PatientDto;
 
 @Component
 public class CRUDDrugs {

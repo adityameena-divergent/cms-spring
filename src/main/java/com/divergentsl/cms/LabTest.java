@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.LabTestDao;
-import com.divergentsl.dto.LabTestDto;
-import com.divergentsl.dto.PatientDto;
+import com.divergentsl.cms.dto.LabTestDto;
+import com.divergentsl.cms.dto.PatientDto;
 
 @Component
 public class LabTest {

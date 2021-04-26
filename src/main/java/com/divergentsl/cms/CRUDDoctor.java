@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.DoctorDao;
-import com.divergentsl.dto.DoctorDto;
-import com.divergentsl.dto.PatientDto;
+import com.divergentsl.cms.dto.DoctorDto;
+import com.divergentsl.cms.dto.PatientDto;
 
 @Component
 public class CRUDDoctor {
@@ -199,44 +199,42 @@ public class CRUDDoctor {
 	 */
 	public void insertDoctor() {
 		Scanner sc = new Scanner(System.in);
-
-		DoctorDto doctorDto = new DoctorDto();
-
-		System.out.println("\n\n--Insert doctor details--");
-		System.out.print("Enter Name: ");
-		String dname = sc.nextLine();
-		doctorDto.setName(dname);
-
-		System.out.print("\nEnter Username: ");
-		String username = sc.nextLine();
-		doctorDto.setUsername(username);
-
-		System.out.print("\nEnter Password: ");
-		String password = sc.nextLine();
-		doctorDto.setPassword(password);
-
-		System.out.print("\nEnter Speciality: ");
-		String speciality = sc.nextLine();
-		doctorDto.setSpeciality(speciality);
-
-		if(validateDoctor(doctorDto)) {
-			return;
-		}
-		
 		try {
+			DoctorDto doctorDto = new DoctorDto();
+
+			System.out.println("\n\n--Insert doctor details--");
+			System.out.print("Enter Name: ");
+			String dname = sc.nextLine();
+			doctorDto.setName(dname);
+
+			System.out.print("\nEnter Username: ");
+			String username = sc.nextLine();
+			doctorDto.setUsername(username);
+
+			System.out.print("\nEnter Password: ");
+			String password = sc.nextLine();
+			doctorDto.setPassword(password);
+
+			System.out.print("\nEnter Speciality: ");
+			String speciality = sc.nextLine();
+			doctorDto.setSpeciality(speciality);
+
+			if (validateDoctor(doctorDto)) {
+				return;
+			}
+
 			int i = doctorDao.insert(dname, username, password, speciality);
 			if (i > 0) {
 				logger.info("Data Inserted Successfully...");
 			} else {
 				logger.info("Data Insertion Unsucessful!");
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | NumberFormatException e) {
 			logger.info(e.getMessage());
 		}
 
 	}
 
-	
 	private boolean validateDoctor(DoctorDto patient) {
 
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

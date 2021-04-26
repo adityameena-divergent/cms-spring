@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.PatientDao;
-import com.divergentsl.dto.PatientDto;
+import com.divergentsl.cms.dto.PatientDto;
 
 @Component
 public class CRUDPatient {
@@ -109,7 +109,7 @@ public class CRUDPatient {
 				logger.info("Data update unsucessfull...");
 			}
 
-		} catch (SQLException e) {
+		} catch (SQLException | NumberFormatException e) {
 
 			logger.info(e.getMessage());
 		}
@@ -262,7 +262,7 @@ public class CRUDPatient {
 			} else {
 				logger.info("Data Insert Unsucessful...");
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | NumberFormatException e) {
 			logger.info(e.getMessage());
 		}
 	}
