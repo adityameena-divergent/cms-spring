@@ -1,10 +1,17 @@
 package com.divergentsl.cms;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.PatientDao;
+import com.divergentsl.dto.PatientDto;
 
 @Component
 public class CRUDPatient {
@@ -50,20 +58,48 @@ public class CRUDPatient {
 			System.out.println("Patient Gender: " + data.get("gender"));
 			System.out.println("Patient Contact Number: " + data.get("contactNumber"));
 			System.out.println("Patient Address: " + data.get("address"));
+			
+			PatientDto patientDto = new PatientDto();
 
 			System.out.print("\nEnter New Name: ");
-			data.put("name", sc.nextLine());
+			String name = sc.nextLine();
+			data.put("name", name);
+			
+			patientDto.setPatientName(name);
+			
 			System.out.print("\nEnter New Age: ");
-			data.put("age", sc.nextLine());
+			String age = sc.nextLine();
+			data.put("age", age);
+			
+			patientDto.setAge(Integer.parseInt(age));
+			
 			System.out.print("\nEnter New Weight: ");
-			data.put("weight", sc.nextLine());
+			String weight = sc.nextLine();
+			data.put("weight", weight);
+			
+			patientDto.setWeight(Integer.parseInt(weight));
+			
 			System.out.print("\nEnter New Gender: ");
-			data.put("gender", sc.nextLine());
+			String gender = sc.nextLine();
+			data.put("gender", gender);
+			
+			patientDto.setGender(gender);
+			
 			System.out.print("\nEnter New Contact Number: ");
-			data.put("contactNumber", sc.nextLine());
+			String contactNumber = sc.nextLine();
+			data.put("contactNumber", contactNumber);
+			
+			patientDto.setContactNumber(Integer.parseInt(contactNumber));
+			
 			System.out.print("\nEnter New Address: ");
-			data.put("address", sc.nextLine());
+			String address = sc.nextLine();
+			data.put("address", address);
+			
 			data.put("id", patientId);
+			
+			if(validatePatient(patientDto)) {
+				return;
+			}
 
 			int i = patientDao.update(data);
 
@@ -176,31 +212,50 @@ public class CRUDPatient {
 			Scanner sc = new Scanner(System.in);
 			Map<String, String> map = new HashMap<>();
 
+			PatientDto patient = new PatientDto();
+			
 			System.out.println("\n----Add Patient----");
 			System.out.print("Enter Patient Name: ");
 			String patient_name = sc.nextLine();
 			map.put("patient_name", patient_name);
+			
+			patient.setPatientName(patient_name);
+			
 
 			System.out.print("\nEnter Age: ");
 			String age = sc.nextLine();
 			map.put("age", age);
+			
+			patient.setAge(Integer.parseInt(age));
 
 			System.out.print("\nEnter Weight: ");
 			String weight = sc.nextLine();
 			map.put("weight", weight);
 
+			patient.setWeight(Integer.parseInt(weight));
+			
 			System.out.print("\nEnter Gender: ");
 			String gender = sc.nextLine();
 			map.put("gender", gender);
+			
+			patient.setGender(gender);
 
 			System.out.print("\nEnter Contact Number: ");
 			String contact_number = sc.nextLine();
 			map.put("contact_number", contact_number);
 
+			patient.setContactNumber(Integer.parseInt(contact_number));
+			
 			System.out.print("\nEnter Address: ");
 			String address = sc.nextLine();
 			map.put("address", address);
+			
+			patient.setAddress(address);
 
+			if(validatePatient(patient)) {
+				return;
+			}
+			
 			
 			if (patientDao.insert(map) > 0) {
 				logger.info("Data Inserted Successfully...");
@@ -276,5 +331,22 @@ public class CRUDPatient {
 			logger.info(e.getMessage());
 		}
 	}
+	
+	
+	private boolean validatePatient(PatientDto patient) {
+		
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+		
+		Set<ConstraintViolation<PatientDto>> violations = validator.validate(patient);
+		
+		for (ConstraintViolation<PatientDto> violation : violations) {
+			logger.error(violation.getMessage());
+			
+		}
+		
+		return violations.size() > 0;
+	}
+	
 
 }

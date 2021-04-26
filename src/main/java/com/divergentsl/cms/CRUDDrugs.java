@@ -3,6 +3,12 @@ package com.divergentsl.cms;
 import java.sql.*;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,19 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.DrugDao;
+import com.divergentsl.dto.DrugDto;
+import com.divergentsl.dto.PatientDto;
 
 @Component
 public class CRUDDrugs {
 
 	private static Logger logger = LoggerFactory.getLogger(CRUDDrugs.class);
-	
-	
+
 	@Autowired
 	private DrugDao drugDao;
-	
-	
-	
-	
+
 	/**
 	 * This method takes input from user and redirect it to the operation that he
 	 * wants to perform.
@@ -61,8 +65,7 @@ public class CRUDDrugs {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * This method print the operation name that admin can perform on drugs
 	 */
@@ -75,46 +78,54 @@ public class CRUDDrugs {
 		System.out.println("5. Back");
 		System.out.print("Enter your choice: ");
 	}
-	
 
 	/**
-     * This method update the existing data of drugs
-     */
-    public void updateDrug() {
+	 * This method update the existing data of drugs
+	 */
+	public void updateDrug() {
 
-        System.out.println("\n----Update Drug Data----");
-        System.out.print("Enter Drug Id: ");
-        Scanner sc = new Scanner(System.in);
-        String id = sc.nextLine();
-        
-        try {
-        	        
-        	
-        	Map<String, String> data = drugDao.search(id);
+		System.out.println("\n----Update Drug Data----");
+		System.out.print("Enter Drug Id: ");
+		Scanner sc = new Scanner(System.in);
+		String id = sc.nextLine();
 
-        	if (data.size() == 0) {
-        		logger.info("Drug Not Found!");
-        	} else {
-	            System.out.println("\nDrug Id: " + id);
-	            System.out.println("Previous Drug Name: " + data.get("name"));
-	            System.out.println("Previous Drug Description: " + data.get("description"));
-	
-	            System.out.println("\nEnter New Drug Name: ");
-	            String name = sc.nextLine();
-	
-	            System.out.print("\nEnter New Description: ");
-	            String description = sc.nextLine();
-	            
-	            data.put("name", name);
-	            data.put("description", description);
-	            drugDao.update(data);
-        	}
-        } catch(SQLException e) {
-        	logger.info(e.getMessage());
-        }
-    }
+		try {
 
-    
+			Map<String, String> data = drugDao.search(id);
+
+			if (data.size() == 0) {
+				logger.info("Drug Not Found!");
+			} else {
+				System.out.println("\nDrug Id: " + id);
+				System.out.println("Previous Drug Name: " + data.get("name"));
+				System.out.println("Previous Drug Description: " + data.get("description"));
+				
+				DrugDto drugDto = new DrugDto();
+
+				System.out.println("\nEnter New Drug Name: ");
+				String name = sc.nextLine();
+				
+				drugDto.setName(name);
+
+				System.out.print("\nEnter New Description: ");
+				String description = sc.nextLine();
+
+				drugDto.setDescription(description);
+				
+				data.put("name", name);
+				data.put("description", description);
+				
+				if (validateDrug(drugDto)) {
+					return;
+				}
+				
+				drugDao.update(data);
+			}
+		} catch (SQLException e) {
+			logger.info(e.getMessage());
+		}
+	}
+
 	/**
 	 * This method takes drug_id and remove it from database.
 	 */
@@ -128,7 +139,7 @@ public class CRUDDrugs {
 
 			if (drugDao.search(id).size() != 0) {
 				int i = drugDao.delete(id);
-				if(i > 0) {
+				if (i > 0) {
 					logger.info("Drug Deleted Successfully...");
 				} else {
 					logger.info("Drug Deletion Unsuccessfull!");
@@ -142,7 +153,6 @@ public class CRUDDrugs {
 
 	}
 
-	
 	/**
 	 * This method print the data of input drug_id
 	 */
@@ -154,7 +164,7 @@ public class CRUDDrugs {
 		String id = sc.nextLine();
 
 		try {
-			
+
 			Map<String, String> data = drugDao.search(id);
 
 			if (data.size() != 0) {
@@ -174,17 +184,25 @@ public class CRUDDrugs {
 	 */
 	public void addDrug() {
 
-		System.out.println("\n----Add new drug----");
-		System.out.println("Enter Drug Name: ");
-
-		Scanner sc = new Scanner(System.in);
-		String name = sc.nextLine();
-
-		System.out.print("\nEnter Drug Description: ");
-		String description = sc.nextLine();
-
+		DrugDto drugDto = new DrugDto();
 		try {
+			System.out.println("\n----Add new drug----");
+			System.out.println("Enter Drug Name: ");
 
+			Scanner sc = new Scanner(System.in);
+			String name = sc.nextLine();
+
+			drugDto.setName(name);
+
+			System.out.print("\nEnter Drug Description: ");
+			String description = sc.nextLine();
+
+			drugDto.setDescription(description);
+
+			if(validateDrug(drugDto)) {
+				return;
+			}
+			
 			int i = drugDao.add(name, description);
 			if (i > 0) {
 				logger.info("Drug Added Successfully...");
@@ -194,6 +212,19 @@ public class CRUDDrugs {
 		} catch (SQLException e) {
 			logger.info(e.getMessage());
 		}
+	}
+
+	private boolean validateDrug(DrugDto drug) {
+
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+
+		Set<ConstraintViolation<DrugDto>> violations = validator.validate(drug);
+
+		for (ConstraintViolation<DrugDto> violation : violations) {
+			logger.error(violation.getMessage());
+		}
+		return violations.size() > 0;
 	}
 
 }

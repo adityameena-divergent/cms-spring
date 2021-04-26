@@ -4,6 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,21 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.divergentsl.cms.dao.DoctorDao;
+import com.divergentsl.dto.DoctorDto;
+import com.divergentsl.dto.PatientDto;
 
 @Component
 public class CRUDDoctor {
 
-	
 	private static Logger logger = LoggerFactory.getLogger(CRUDDoctor.class);
-	
+
 	@Autowired
 	private DoctorDao doctorDao;
-	
-	
-	
-	
+
 	/**
-	 * This method takes input from user & redirect it to specific method which he want perform operations on doctor
+	 * This method takes input from user & redirect it to specific method which he
+	 * want perform operations on doctor
 	 */
 	public void CRUDOperation() {
 		CRUD: while (true) {
@@ -62,7 +67,7 @@ public class CRUDDoctor {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method print all the operations that can perform on doctor
 	 */
@@ -76,18 +81,15 @@ public class CRUDDoctor {
 		System.out.println("Enter your choice: ");
 	}
 
-	
 	/**
 	 * This method takes doctor id and remove it from record
 	 */
 	public void deleteDoctor() {
-		
 
 		System.out.println("\n----Remove Doctor----");
 		System.out.print("Enter Doctor Id: ");
 		Scanner sc = new Scanner(System.in);
 		String doctor_id = sc.nextLine();
-
 
 		try {
 			if (doctorDao.searchById(doctor_id).size() == 0) {
@@ -119,7 +121,7 @@ public class CRUDDoctor {
 		Scanner sc = new Scanner(System.in);
 
 		String did = sc.nextLine();
-		
+
 		Map<String, String> map = null;
 		try {
 			map = doctorDao.searchById(did);
@@ -140,7 +142,7 @@ public class CRUDDoctor {
 			map.put("speciality", sc.nextLine());
 
 			try {
-				if(doctorDao.update(map) > 0) {
+				if (doctorDao.update(map) > 0) {
 					logger.info("Data Update Successfully...");
 				} else {
 					logger.info("Data update unsucessful!");
@@ -151,15 +153,15 @@ public class CRUDDoctor {
 		}
 	}
 
-	
 	/**
 	 * This method print the previous data before giving the input for update data.
+	 * 
 	 * @param map of doctor data.
 	 */
-	public void printPreviousDataOfDoctor(Map<String,String> map) {
+	public void printPreviousDataOfDoctor(Map<String, String> map) {
 		System.out.println("\n----Update Doctor Data----");
 		System.out.println("Doctor Id : " + map.get("did"));
-		System.out.println("Previous Doctor Name : " + map.get("dname"));	
+		System.out.println("Previous Doctor Name : " + map.get("dname"));
 		System.out.println("Previous Doctor Speciality : " + map.get("speciality"));
 	}
 
@@ -167,23 +169,23 @@ public class CRUDDoctor {
 	 * This method print all the doctor record present in database.
 	 */
 	public void listDoctors() {
-		
+
 		try {
 
-			
 			List<Map<String, String>> doctorList = doctorDao.list();
-			
+
 			String did = "DoctorId";
 			String dname = "Doctor Name";
 			String speciality = "Speciality";
 
 			System.out.printf("%10s%15s%15s\n", did, dname, speciality);
 			System.out.println("------------------------------------------------");
-			
+
 			for (Map<String, String> aDoctor : doctorList) {
-				System.out.printf("%10s%15s%15s\n", aDoctor.get(DoctorDao.ID), aDoctor.get(DoctorDao.NAME), aDoctor.get(DoctorDao.SPECIALITY));
+				System.out.printf("%10s%15s%15s\n", aDoctor.get(DoctorDao.ID), aDoctor.get(DoctorDao.NAME),
+						aDoctor.get(DoctorDao.SPECIALITY));
 			}
-			
+
 			System.out.println("-------------------------------------------------");
 
 		} catch (SQLException e) {
@@ -192,24 +194,35 @@ public class CRUDDoctor {
 	}
 
 	/**
-	 * This method takes input from user for insertint new doctor data & pass it to helper method as a Map for insert the data into database.
+	 * This method takes input from user for insertint new doctor data & pass it to
+	 * helper method as a Map for insert the data into database.
 	 */
 	public void insertDoctor() {
 		Scanner sc = new Scanner(System.in);
 
+		DoctorDto doctorDto = new DoctorDto();
+
 		System.out.println("\n\n--Insert doctor details--");
 		System.out.print("Enter Name: ");
 		String dname = sc.nextLine();
+		doctorDto.setName(dname);
 
 		System.out.print("\nEnter Username: ");
 		String username = sc.nextLine();
+		doctorDto.setUsername(username);
 
 		System.out.print("\nEnter Password: ");
 		String password = sc.nextLine();
+		doctorDto.setPassword(password);
 
 		System.out.print("\nEnter Speciality: ");
 		String speciality = sc.nextLine();
+		doctorDto.setSpeciality(speciality);
 
+		if(validateDoctor(doctorDto)) {
+			return;
+		}
+		
 		try {
 			int i = doctorDao.insert(dname, username, password, speciality);
 			if (i > 0) {
@@ -224,5 +237,19 @@ public class CRUDDoctor {
 	}
 
 	
+	private boolean validateDoctor(DoctorDto patient) {
+
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
+
+		Set<ConstraintViolation<DoctorDto>> violations = validator.validate(patient);
+
+		for (ConstraintViolation<DoctorDto> violation : violations) {
+			logger.error(violation.getMessage());
+
+		}
+
+		return violations.size() > 0;
+	}
 
 }
