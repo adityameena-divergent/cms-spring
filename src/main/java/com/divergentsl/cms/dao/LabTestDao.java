@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cms.database.IDatabaseManager;
@@ -24,6 +25,9 @@ public class LabTestDao {
 	
 	@Autowired
 	IDatabaseManager databaseManager;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	public LabTestDao(IDatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
@@ -43,18 +47,12 @@ public class LabTestDao {
 	 * @return 1 if test data successfully add, otherwise it returns 0.
 	 * @throws SQLException
 	 */
-	public int add(String patientId, String testName, String fee) throws SQLException {
+	public int add(String patientId, String testName, String fee) {
 
-		Connection con = null;
-		Statement st = null;
-
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-
-		int i = st.executeUpdate("insert into lab_test (" + TEST_NAME + ", " + PATIENT_ID + ", " + TEST_FEE + ") values ('" + testName + "', "
-				+ patientId + ", " + fee + ")");
-		st.close();
-		con.close();
+		String query = "insert into lab_test (?, ?, ?) values ('?', ?, ?)";
+		
+		int i = jdbcTemplate.update(query, TEST_NAME, PATIENT_ID, TEST_FEE, testName, patientId, fee);
+		
 		return i;
 	}
 	
@@ -131,18 +129,12 @@ public class LabTestDao {
 	 * @return 1 if data successfully delete, otherwise it returns 0.
 	 * @throws SQLException
 	 */
-	public int delete(String testId) throws SQLException {
+	public int delete(String testId) {
 		
-		Connection con = null;
-		Statement st = null;
+		String query = "delete from lab_test where ? = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
+		int i = jdbcTemplate.update(query, TEST_ID, testId);
 		
-		int i = st.executeUpdate("delete from lab_test where " + TEST_ID + " = " + testId);
-		
-		st.close();
-		con.close();
 		return i;
 	}
 	
@@ -155,18 +147,10 @@ public class LabTestDao {
 	 */
 	public int update(Map<String, String> data) throws SQLException {
 		
-		Connection con = null;
-		Statement st = null;
+		String query = "update lab_test set ? = '?', ? = ?, ? = ? where ? = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
+		int i = jdbcTemplate.update(query, TEST_NAME, data.get("testName"), TEST_ID, data.get("patientId"), TEST_FEE, data.get("fee"), TEST_ID, data.get("testId"));
 		
-		int i = st.executeUpdate("update lab_test set " + TEST_NAME + " = '" + data.get("testName") + "', " + PATIENT_ID + " = " + data.get("patientId")
-				+ ", " + TEST_FEE + " = " + data.get("fee") + " where " + TEST_ID + " = "
-				+ data.get("testId"));
-		
-		st.close();
-		con.close();
 		return i;
 	}
 

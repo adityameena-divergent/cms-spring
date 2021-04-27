@@ -44,58 +44,56 @@ public class CRUDPatient {
 
 		try {
 
-			Map<String, String> data = patientDao.search(patientId);
+			PatientDto data = patientDao.search(patientId);
 
-			if (data.size() == 0) {
+			if (data.getId() == null) {
 				logger.info("Patient not found...");
 				return;
 			}
 
 			System.out.println("\nPatient Id: " + patientId);
-			System.out.println("Patient Name: " + data.get("name"));
-			System.out.println("Patient Age: " + data.get("age"));
-			System.out.println("Patient Weight: " + data.get("weight"));
-			System.out.println("Patient Gender: " + data.get("gender"));
-			System.out.println("Patient Contact Number: " + data.get("contactNumber"));
-			System.out.println("Patient Address: " + data.get("address"));
+			System.out.println("Patient Name: " + data.getPatientName());
+			System.out.println("Patient Age: " + data.getAge());
+			System.out.println("Patient Weight: " + data.getWeight());
+			System.out.println("Patient Gender: " + data.getGender());
+			System.out.println("Patient Contact Number: " + data.getContactNumber());
+			System.out.println("Patient Address: " + data.getAddress());
 			
 			PatientDto patientDto = new PatientDto();
 
 			System.out.print("\nEnter New Name: ");
 			String name = sc.nextLine();
-			data.put("name", name);
+			data.setPatientName(name);
 			
 			patientDto.setPatientName(name);
 			
 			System.out.print("\nEnter New Age: ");
 			String age = sc.nextLine();
-			data.put("age", age);
+			data.setAge(Integer.parseInt(age));
 			
 			patientDto.setAge(Integer.parseInt(age));
 			
 			System.out.print("\nEnter New Weight: ");
 			String weight = sc.nextLine();
-			data.put("weight", weight);
+			data.setWeight(Integer.parseInt(weight));
 			
 			patientDto.setWeight(Integer.parseInt(weight));
 			
 			System.out.print("\nEnter New Gender: ");
 			String gender = sc.nextLine();
-			data.put("gender", gender);
+			data.setGender(gender);
 			
 			patientDto.setGender(gender);
 			
 			System.out.print("\nEnter New Contact Number: ");
 			String contactNumber = sc.nextLine();
-			data.put("contactNumber", contactNumber);
+			data.setContactNumber(Integer.parseInt(contactNumber));
 			
 			patientDto.setContactNumber(Integer.parseInt(contactNumber));
 			
 			System.out.print("\nEnter New Address: ");
 			String address = sc.nextLine();
-			data.put("address", address);
-			
-			data.put("id", patientId);
+			data.setAddress(address);
 			
 			if(validatePatient(patientDto)) {
 				return;
@@ -129,7 +127,7 @@ public class CRUDPatient {
 		try {
 
 
-			if (patientDao.search(patientId).size() != 0)
+			if (patientDao.search(patientId).getId() != null)
 				if (patientDao.delete(patientId) > 0) {
 					logger.info("Patient deleted successfully...");
 				} else {
@@ -161,6 +159,7 @@ public class CRUDPatient {
 	/**
 	 * This method takes a input & redirect it to specific that admin want to
 	 * perform operation.
+	 * @throws SQLException 
 	 */
 	public void CRUDOperation() {
 		CRUD: while (true) {
@@ -257,18 +256,19 @@ public class CRUDPatient {
 			}
 			
 			
-			if (patientDao.insert(map) > 0) {
+			if (patientDao.insert(patient) > 0) {
 				logger.info("Data Inserted Successfully...");
 			} else {
 				logger.info("Data Insert Unsucessful...");
 			}
-		} catch (SQLException | NumberFormatException e) {
+		} catch (Exception e) {
 			logger.info(e.getMessage());
 		}
 	}
 
 	/**
 	 * This method takes patient id & print all the data of that patient
+	 * @throws SQLException 
 	 */
 	public void search() {
 
@@ -280,21 +280,22 @@ public class CRUDPatient {
 			String patientId = sc.nextLine();
 
 
-			Map<String, String> data = patientDao.search(patientId);
+			PatientDto data = patientDao.search(patientId);
 
-			if (data.size() != 0) {
-				System.out.println("\nPatient Id: " + data.get("id"));
-				System.out.println("Patient Name: " + data.get("name"));
-				System.out.println("Age: " + data.get("age"));
-				System.out.println("Weight: " + data.get("weight"));
-				System.out.println("Gender: " + data.get("gender"));
-				System.out.println("Contact Number: " + data.get("contactNumber"));
-				System.out.println("Address: " + data.get("address"));
+			if (data.getId() != null) {
+				System.out.println("\nPatient Id: " + data.getId());
+				System.out.println("Patient Name: " + data.getPatientName());
+				System.out.println("Age: " + data.getAge());
+				System.out.println("Weight: " + data.getWeight());
+				System.out.println("Gender: " + data.getGender());
+				System.out.println("Contact Number: " + data.getContactNumber());
+				System.out.println("Address: " + data.getAddress());
 			} else {
 				logger.info("Data Not Found!");
 			}
 
-		} catch (SQLException e) {
+		}
+		catch (Exception e) {
 			logger.info(e.getMessage());
 		}
 	}

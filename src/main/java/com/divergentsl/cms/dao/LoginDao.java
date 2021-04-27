@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cms.database.DatabaseManager;
@@ -22,6 +23,9 @@ public class LoginDao {
 	
 	@Autowired
 	IDatabaseManager databaseManager;
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 	
 	public final String USERNAME = "username";
 	public final String PASSWORD = "password";

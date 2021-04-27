@@ -126,7 +126,7 @@ public class LabTest {
 			} else {
 				logger.info("Test Add Unsuccessfull!");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			logger.info(e.getMessage());
 		}
 	}

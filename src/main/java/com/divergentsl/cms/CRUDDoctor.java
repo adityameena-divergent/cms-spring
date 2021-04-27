@@ -101,7 +101,7 @@ public class CRUDDoctor {
 					doctorDao.delete(doctor_id);
 					logger.info("Data Deleted Successfully...");
 
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					logger.info("Data Deletion Unsuccessful...");
 				}
 			}
@@ -147,7 +147,7 @@ public class CRUDDoctor {
 				} else {
 					logger.info("Data update unsucessful!");
 				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				logger.info(e.getMessage());
 			}
 		}
@@ -229,7 +229,7 @@ public class CRUDDoctor {
 			} else {
 				logger.info("Data Insertion Unsucessful!");
 			}
-		} catch (SQLException | NumberFormatException e) {
+		} catch (Exception e) {
 			logger.info(e.getMessage());
 		}
 

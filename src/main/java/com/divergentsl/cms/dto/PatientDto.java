@@ -6,6 +6,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PatientDto {
+	
+	private String id;
 
 	@NotNull(message = "Name cannot be null")
 	@Size(min = 5, max = 20, message = "Name must be between 10 and 20 characters")
@@ -27,6 +29,13 @@ public class PatientDto {
 	
 	private String address;
 	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getPatientName() {
 		return patientName;

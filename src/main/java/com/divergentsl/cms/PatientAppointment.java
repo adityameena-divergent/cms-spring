@@ -71,7 +71,7 @@ public class PatientAppointment {
 
 		try {
 
-			if (patientDao.search(patientId).size() == 0 || doctorDao.searchById(doctorId).size() == 0) {
+			if (patientDao.search(patientId).getId() == null || doctorDao.searchById(doctorId).size() == 0) {
 				
 				logger.info("Patient or Doctor Data Not Found!");
 				

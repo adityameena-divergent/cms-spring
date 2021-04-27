@@ -1,5 +1,6 @@
 package com.divergentsl.cms;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class Login {
     /**
      * This method is loginPanel which ask for that you want to login as admin or doctor
      * for admin or doctor to login, first admin have to login if username & password is correct then it will redirect admin to adminPanel if it login as admin or if it will login as doctor then it will redirect ot doctorPanel, other wise it will print message "You are not authorised"
+     * @throws SQLException 
      */
     public void loginPanel() {
 

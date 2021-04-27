@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cms.database.IDatabaseManager;
@@ -27,6 +28,10 @@ public class DrugDao {
 	public final String DESCRIPTION = "description";
 	public final String NAME = "drug_name";
 
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+
+	
 	public DrugDao(IDatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
 	}
@@ -39,18 +44,15 @@ public class DrugDao {
 	 * @throws SQLException
 	 */
 	public int add(String name, String description) throws SQLException {
-
-		Connection con = null;
-		Statement st = null;
-
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		int i = st.executeUpdate("insert into drug (" + NAME + ", " + DESCRIPTION + ") values ('" + name + "','" + description + "')");
-		st.close();
-		con.close();
+		
+		String query = "insert into drug (?, ?) values ('?','?')";
+		
+		int i = jdbcTemplate.update(query, NAME, DESCRIPTION, description);		
+		
 		return i;
 	}
 
+	
 	/**
 	 * It is a helper method for search the drug by drug id
 	 * @param id
@@ -84,18 +86,11 @@ public class DrugDao {
 	 * @return 1 if drug data successfully deleted, otherwise it returns 0.
 	 * @throws SQLException
 	 */
-	public int delete(String id) throws SQLException {
+	public int delete(String id) {
 		
-		Connection con = null;
-		Statement st = null;
-		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		
-		int i = st.executeUpdate("delete from drug where " + ID + " = " + id);
+		String query = "delete from drug where ? = ?";
+		int i = jdbcTemplate.update(query, ID, id);
 
-		st.close();
-		con.close();
 		return i;
 	}
 	
@@ -108,15 +103,10 @@ public class DrugDao {
 	 */
 	public int update(Map<String, String> data) throws SQLException {
 		
-		Connection con = null;
-		Statement st = null;
+		String query = "update drug set ? = '?', ? = '?' where ? = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		int i = st.executeUpdate("update drug set " + NAME + " = '" + data.get("name") + "', " + DESCRIPTION + " = '" + data.get("description") + "' where " + ID + " = " + data.get("id"));
+		int i = jdbcTemplate.update(query, NAME, data.get("name"), DESCRIPTION, data.get("description"), ID, data.get("id"));
 		
-		st.close();
-		con.close();
 		return i;
 	}
 

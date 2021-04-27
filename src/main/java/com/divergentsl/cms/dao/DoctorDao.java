@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cms.database.DatabaseManager;
@@ -30,6 +32,9 @@ public class DoctorDao {
 	public DoctorDao(DatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
 	}
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
 	
 	/**
@@ -38,17 +43,12 @@ public class DoctorDao {
 	 * @return 1 if successfully delete otherwise it return 0.
 	 * @throws SQLException
 	 */
-	public int delete(String doctorId) throws SQLException {
-		Connection con = null;
-		Statement st = null;
+	public int delete(String doctorId) {
+		
+		String query = "delete from doctor where ? = ?";
+		
+		int i = jdbcTemplate.update(query, ID, doctorId);
 
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-
-		int i = st.executeUpdate("delete from doctor where " + ID + " = " + doctorId);
-
-		st.close();
-		con.close();
 		return i;
 	}
 
@@ -58,17 +58,11 @@ public class DoctorDao {
 	 * @return 1 if data successfully updated otherwise it return 0
 	 * @throws SQLException
 	 */
-	public int update(Map<String, String> map) throws SQLException {
-		Connection con;
-		Statement st;
-		con = databaseManager.getConnection();
-		st = con.createStatement();
+	public int update(Map<String, String> map) {
+		
+		String query = "update doctor set ? = '?', '?' = '?' where ? = ?";
 
-		int i = st.executeUpdate("update doctor set " + NAME + " = '" + map.get("dname") + "', " + SPECIALITY + " = '" + map.get(SPECIALITY)
-				+ "' where " + ID + " = " + map.get("did"));
-
-		st.close();
-		con.close();
+		int i = jdbcTemplate.update(query, NAME, map.get("dname"), SPECIALITY, map.get(SPECIALITY), ID, map.get("did"));
 		return i;
 	}
 
@@ -112,21 +106,14 @@ public class DoctorDao {
 	 * @param password
 	 * @param speciality
 	 * @return 1 if data inserted successfully, otherwise it returns 0.
-	 * @throws SQLException
+	 * @throws DataAccessException
 	 */
-	public int insert(String dname, String username, String password, String speciality) throws SQLException {
+	public int insert(String dname, String username, String password, String speciality) {
 
-		Connection con = null;
-		Statement st = null;
+		String query = "insert into doctor (?, username, password, ?) values ('?', '?', '?', '?')";
+		
+		int i = jdbcTemplate.update(query, NAME, SPECIALITY, dname, username, password, speciality);
 
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-
-		int i = st.executeUpdate("insert into doctor (" + NAME + ", username, password, " + SPECIALITY + ") " + "values ('" + dname + "', '"
-				+ username + "', '" + password + "', '" + speciality + "')");
-
-		st.close();
-		con.close();
 		return i;
 	}
 

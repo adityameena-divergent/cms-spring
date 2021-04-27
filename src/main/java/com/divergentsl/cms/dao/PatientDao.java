@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.divergentsl.cms.database.IDatabaseManager;
+import com.divergentsl.cms.dto.PatientDto;
 
 
 /**
@@ -26,6 +29,17 @@ public class PatientDao {
 	@Autowired
 	IDatabaseManager databaseManager;
 	
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+	
+	public static final String ID = "patient_id";
+	public static final String NAME = "patient_name";
+	public static final String AGE = "age";
+	public static final String WEIGHT = "weight";
+	public static final String GENDER = "gender";
+	public static final String CONTACT_NUMBER = "contact_number";
+	public static final String ADDRESS = "address";
+	
 	public PatientDao(IDatabaseManager databaseManager) {
 		this.databaseManager = databaseManager;
 	}
@@ -36,19 +50,11 @@ public class PatientDao {
 	 * @return 1 if data inserted successfully, otherwise it returns false.
 	 * @throws SQLException
 	 */
-	public int insert(Map<String, String> inputData) throws SQLException {
+	public int insert(PatientDto data) {
 
-		Connection con = null;
-		Statement st = null;
+		String query = "insert into patient (?, ?, ?, ?, ?, ?) values ('?', ?, ?, '?', ?, '?')";
+		int i = jdbcTemplate.update(query, NAME, AGE, WEIGHT, GENDER, CONTACT_NUMBER, ADDRESS, data.getPatientName(), data.getAge(), data.getWeight(), data.getGender(), data.getContactNumber(), data.getAddress());
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		
-		int i = st.executeUpdate("insert into patient (patient_name, age, weight, gender, contact_number, address) values " +
-                "('" + inputData.get("patient_name") + "', " + inputData.get("age") + ", " + inputData.get("weight") + ", '" + inputData.get("gender") + "', " + inputData.get("contact_number") + ", '" + inputData.get("address") + "')");
-		
-		st.close();
-		con.close();
 		return i;
 	}
 	
@@ -59,31 +65,15 @@ public class PatientDao {
 	 * @return Map of patient data if patient is found, otherwise it returns empty Map.
 	 * @throws SQLException
 	 */
-	public Map<String, String> search(String patientId) throws SQLException {
+	public PatientDto search(String patientId) throws SQLException {
 		
-		Connection con = null;
-		Statement st = null;
+		String query = "select * from patient where patient_id = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
+		RowMapper<PatientDto> rowMapper = new RowMapperPatient();
 		
-		Map<String, String> data = new HashMap<>();
+		PatientDto patient = jdbcTemplate.queryForObject(query, rowMapper, patientId);
 		
-		ResultSet rs = st.executeQuery("select * from patient where patient_id = " + patientId);
-		
-		if (rs.next()) {
-			data.put("id", rs.getString(1));
-			data.put("name", rs.getString(2));
-			data.put("age", rs.getString(3));
-			data.put("weight", rs.getString(4));
-			data.put("gender", rs.getString(5));
-			data.put("contactNumber", rs.getString(6));
-			data.put("address", rs.getString(7));
-		}
-
-		st.close();
-		con.close();
-		return data;
+		return patient;
 	}
 	
 	
@@ -126,15 +116,11 @@ public class PatientDao {
 	 * @return 1 if data deleted succesfully, otherwise it returns false.
 	 * @throws SQLException
 	 */
-	public int delete(String patientId) throws SQLException {
+	public int delete(String patientId) {
 		
-		Connection con = null;
-		Statement st = null;
+		String query = "delete from patient where ? = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		
-		int i = st.executeUpdate("delete from patient where patient_id = " + patientId);
+		int i = jdbcTemplate.update(query, ID, patientId);
 		return i;
 	}
 	
@@ -145,16 +131,11 @@ public class PatientDao {
 	 * @return 1 if data successfully updated, otherwise it returns 0.
 	 * @throws SQLException
 	 */
-	public int update(Map<String, String> data) throws SQLException {
-		Connection con = null;
-		Statement st = null;
+	public int update(PatientDto data) {
+	
+		String query = "update patient set ? = '?', ? = ?, ? = ?, ? = '?', ? = '?', ? = '?' where ? = ?";
 		
-		con = databaseManager.getConnection();
-		st = con.createStatement();
-		int i = st.executeUpdate("update patient set patient_name = '" + data.get("name") + "', age = " + data.get("age") + ", weight = " + data.get("weight") + ", gender = '" + data.get("gender") + "', contact_number = '" + data.get("contactNumber") + "', address = '" + data.get("address") + "' where patient_id = " + data.get("id"));
-		
-		st.close();
-		con.close();
+		int i = jdbcTemplate.update(query, NAME, data.getPatientName(), AGE, data.getAge(), WEIGHT, data.getWeight(), GENDER, data.getGender(), CONTACT_NUMBER, data.getContactNumber(), ADDRESS, data.getAddress(), ID, data.getId());
 		
 		return i;
 	}

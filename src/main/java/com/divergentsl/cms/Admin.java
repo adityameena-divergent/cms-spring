@@ -1,5 +1,6 @@
 package com.divergentsl.cms;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ public class Admin {
 
     /**
      * This method print all the operation that admin can perform, and ask for input for which operation admin want to perform, then after it redirect to that specific operation panel according to input.
+     * @throws SQLException 
      */
     public void adminPanel() {
     	
